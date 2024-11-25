@@ -1,0 +1,21 @@
+# Block access to sensitive files
+<FilesMatch "\.(htaccess|htpasswd|ini|phps|log)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Prevent directory listing
+Options -Indexes
+
+# Customize error pages
+ErrorDocument 400 /passoire/error.html
+ErrorDocument 401 /passoire/error.html
+ErrorDocument 403 /passoire/error.html
+ErrorDocument 404 /passoire/error.html
+ErrorDocument 500 /passoire/error.html
+
+# Prevent websites from displaying your content in iframes (Clickjacking Defense)
+Header set X-Frame-Options DENY
+
+# Prevent browsers from MIME-sniffing the content type
+Header set X-Content-Type-Options nosniff
