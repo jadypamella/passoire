@@ -1,9 +1,6 @@
 # Base image
 FROM nharrand/passoire:latest
 
-### Flag 2
-RUN chmod -R 400 /root
-
 ### Flag 3
 # Copy the .htaccess file 
 COPY /files/.htaccess /passoire/web/.htaccess
@@ -26,6 +23,21 @@ RUN a2enmod headers
 RUN apache2ctl restart
 
 ### Flag 14
-# Removing user admin
-RUN userdel -r a
-RUN userdel -r admin
+# Removing user 'a' if it exists
+RUN if getent passwd a > /dev/null 2>&1; then userdel -r a; fi
+
+# Removing user 'admin' if it exists
+RUN if getent passwd admin > /dev/null 2>&1; then userdel -r admin; fi
+
+### Flag 2
+RUN chmod -R 400 /root
+
+# Change the ownership of the documents from root to 'passoire'
+RUN chown -R passoire:passoire /passoire/
+
+# Switch to user 'passoire'
+USER passoire
+
+# Continue with your application's setup or commands
+WORKDIR /passoire
+COPY . /passoire
