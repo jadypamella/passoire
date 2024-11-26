@@ -1,5 +1,5 @@
 # Block access to sensitive files
-<FilesMatch "\.(htaccess|htpasswd|ini|phps|log)$">
+<FilesMatch "\.(htaccess|htpasswd|ini|phps|log|env)$">
     Order Allow,Deny
     Deny from all
 </FilesMatch>
