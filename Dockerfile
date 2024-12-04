@@ -1,5 +1,11 @@
 # Base image
-FROM nharrand/passoire:latest
+FROM jadypamella/passoire:latest
+
+# Stop crypto-helper
+RUN /passoire/crypto-helper/crypto-helper.sh stop
+
+# Copy the new signup page
+COPY /files/signup.php /passoire/web/signup.php
 
 ### Flag 13
 # Replace the php.ini file 
@@ -26,6 +32,7 @@ RUN a2enmod headers
 # Restart Apache
 RUN apache2ctl restart
 
+
 ### Flag 9
 # Encrypt the flag file during the build process
 #RUN openssl enc -aes-256-cbc -salt -pbkdf2 -in /passoire/crypto-helper/flag_9 -out /passoire/crypto-helper/flag_9.enc -k "Z9fE4y@M8Q3#nH" && \
@@ -36,26 +43,19 @@ RUN apache2ctl restart
 
 ### Flag 14
 # Removing user 'a' if it exists
-RUN if getent passwd a > /dev/null 2>&1; then userdel -r a; fi
+#RUN if getent passwd a > /dev/null 2>&1; then userdel -r a; fi
 
 # Removing user 'admin' if it exists
-RUN if getent passwd admin > /dev/null 2>&1; then userdel -r admin; fi
+#RUN if getent passwd admin > /dev/null 2>&1; then userdel -r admin; fi
 
 ### Flag 6
-RUN chmod 000 /passoire/web/uploads/flag_6
+#RUN chmod 000 /passoire/web/uploads/flag_6
 
 ### Flag 2
-RUN chmod -R 400 /root
+#RUN chmod -R 400 /root
 
 # Change the ownership of the documents from root to 'passoire'
-RUN chown -R passoire:passoire /passoire/
-
-# Switch to user 'passoire'
-USER passoire
-
-# Continue with your application's setup or commands
-WORKDIR /passoire
-COPY . /passoire
+#RUN chown -R passoire:passoire /passoire/
 
 
 ### Final Adjustments
@@ -63,10 +63,9 @@ COPY . /passoire
 #RUN echo 'LogLevel error' >> /etc/apache2/apache2.conf
 #RUN apache2ctl restart
 
-# Remove flags?
-#RUN rm /home/passoire/flag_1
-#RUN rm /root/flag_2
-#RUN rm /passoire/web/flag_3
-#RUN /passoire/web/uploads/flag_6
-#RUN /passoire/crypto-helper/flag_9
-#RUN /home/admin/flag_14
+# Switch to user 'passoire'
+#USER passoire
+
+# Continue with your application's setup or commands
+#WORKDIR /passoire
+
