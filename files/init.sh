@@ -53,17 +53,5 @@ sed -i "s/CONTAINER_IP/$HOST/g" /passoire/crypto-helper/server.js
 
 sudo -n touch /passoire/logs/crypto-helper.log
 
-# Remove Priveligies
-sudo -n newgrp passoire
-sudo -n chmod 640 /var/log/apache2/access.log
-sudo -n chmod 640 /var/log/apache2/error.log
-sudo -n chmod 750 /var/log/apache2/
-sudo -n chgrp passoire /var/log/apache2/
-sudo -n chgrp passoire /var/log/apache2/access.log
-sudo -n chgrp passoire /var/log/apache2/error.log
-#sudo -n deluser passoire sudo
-sudo -n deluser passoire root
-sudo -n sed -i '/^passoire ALL=(ALL:ALL) NOPASSWD: ALL$/d' /etc/sudoers
-
 # Monitor logs
 tail -f /passoire/logs/crypto-helper.log /var/log/apache2/access.log /var/log/apache2/error.log
