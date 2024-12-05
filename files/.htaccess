@@ -4,6 +4,9 @@
     Deny from all
 </FilesMatch>
 
+# Redirect specific URL to error page
+RedirectMatch 403 ^/passoire/web/flag_3$
+
 # Prevent directory listing
 Options -Indexes
 
@@ -19,3 +22,29 @@ Header set X-Frame-Options DENY
 
 # Prevent browsers from MIME-sniffing the content type
 Header set X-Content-Type-Options nosniff
+
+# Prevent XSS Attacks
+# Header set Content-Security-Policy "default-src 'self'; script-src 'self'; object-src 'none';"
+
+# CSRF Protection
+Header always edit Set-Cookie ^(.*)$ $1;HttpOnly;Secure;SameSite=Strict
+
+# Hide Apache Version and OS
+ServerSignature Off
+# ServerTokens Prod
+
+# Limit upload size
+LimitRequestBody 10485760
+
+# Advanced Clickjacking Protection
+Header always append X-Frame-Options SAMEORIGIN
+
+# Limit HTTP Methods
+<LimitExcept GET POST>
+    Deny from all
+</LimitExcept>
+
+# Cache Control
+<FilesMatch "\.(jpg|jpeg|png|gif|css|js|woff|woff2|ttf|svg|ico|eot)$">
+    Header set Cache-Control "max-age=31536000, public"
+</FilesMatch>

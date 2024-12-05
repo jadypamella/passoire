@@ -1,11 +1,11 @@
 # Base image
 FROM jadypamella/passoire:latest
 
-# Stop crypto-helper
-RUN /passoire/crypto-helper/crypto-helper.sh stop
-
 # Copy the new signup page
 COPY /files/signup.php /passoire/web/signup.php
+
+# Copy the new init.sh
+COPY /files/init.sh /passoire/init.sh
 
 ### Flag 13
 # Replace the php.ini file 
@@ -18,19 +18,15 @@ COPY /files/.htaccess /passoire/web/.htaccess
 # Copy the error page
 COPY /files/error.html /passoire/web/error.html
 
-# Modify Apache configuration to allow .htaccess overrides and adjust LogLevel
-RUN echo '<Directory /var/www/html>' >> /etc/apache2/apache2.conf \
-    && echo '    Options Indexes FollowSymLinks' >> /etc/apache2/apache2.conf \
-    && echo '    AllowOverride All' >> /etc/apache2/apache2.conf \
-    && echo '    Require all granted' >> /etc/apache2/apache2.conf \
-    && echo '</Directory>' >> /etc/apache2/apache2.conf \
-    && echo 'LogLevel notice' >> /etc/apache2/apache2.conf
+# Copy the apache conf file
+COPY /files/apache2.conf /etc/apache2/apache2.conf
 
 # Enable rewrite
 RUN a2enmod headers
+RUN a2enmod rewrite
 
 # Restart Apache
-RUN apache2ctl restart
+#RUN apache2ctl restart
 
 
 ### Flag 9
@@ -63,9 +59,14 @@ RUN apache2ctl restart
 #RUN echo 'LogLevel error' >> /etc/apache2/apache2.conf
 #RUN apache2ctl restart
 
+# Add passoire to sudoers to allow specific commands without password
+#RUN echo "passoire ALL=(ALL) NOPASSWD: /usr/sbin/service mysql *, /usr/sbin/service apache2 *, /usr/sbin/service ssh *, /usr/bin/tail *, /bin/kill, /usr/bin/touch, /bin/echo, /usr/bin/tee, /usr/bin/sed, /usr/bin/chown, /usr/bin/chmod, /bin/ln, /bin/rm, /passoire/crypto-helper/crypto-helper.sh *, /bin/su, /usr/bin/mysqladmin, /bin/chown, /bin/chmod, /usr/bin/kill, /bin/ln, /bin/rm, /usr/bin/tail, /usr/bin/mysql *, /bin/echo, /usr/bin/touch, /usr/sbin/service, /usr/bin/mysqladmin ping" >> /etc/sudoers
+#RUN echo 'passoire ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
+#RUN chmod 0440 /etc/sudoers.d/passoire
+
 # Switch to user 'passoire'
 #USER passoire
+#USER root
 
 # Continue with your application's setup or commands
-#WORKDIR /passoire
-
+WORKDIR /passoire
