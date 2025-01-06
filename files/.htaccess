@@ -6,6 +6,7 @@
 
 # Redirect specific URL to error page
 RedirectMatch 403 ^/passoire/web/flag_3$
+RedirectMatch 403 ^/passoire/uploads/flag_6$
 
 # Prevent directory listing
 Options -Indexes

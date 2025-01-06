@@ -37,16 +37,16 @@ RUN a2enmod rewrite
 
 ### Flag 14
 # Removing user 'a' if it exists
-RUN if getent passwd a > /dev/null 2>&1; then userdel -r a; fi
+#RUN if getent passwd a > /dev/null 2>&1; then userdel -r a; fi
 
 # Removing user 'admin' if it exists
-RUN if getent passwd admin > /dev/null 2>&1; then userdel -r admin; fi
+#RUN if getent passwd admin > /dev/null 2>&1; then userdel -r admin; fi
 
 ### Flag 6
 #RUN chmod 000 /passoire/web/uploads/flag_6
 
 ### Flag 2
-RUN chmod -R 400 /root
+#RUN chmod -R 400 /root
 
 # Change the ownership of the documents from root to 'passoire'
 #RUN chown -R passoire:passoire /passoire/
